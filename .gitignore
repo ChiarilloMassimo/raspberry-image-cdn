@@ -1,4 +1,7 @@
 cache/*
 !cache/.gitkeep
 
+shared/images/*
+!shared/images/.gitkeep
+
 vendor

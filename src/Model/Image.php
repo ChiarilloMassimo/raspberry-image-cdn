@@ -69,7 +69,7 @@ class Image
     public function getPath()
     {
         return sprintf(
-            __DIR__.'/../../web/shared/uploads/%s',
+            __DIR__.'/../../shared/images/%s',
             $this->getBasePath()
         );
     }
