@@ -1,5 +1,5 @@
-cache/*
-!cache/.gitkeep
+cache/images/*
+!cache/images/.gitkeep
 
 shared/images/*
 !shared/images/.gitkeep
