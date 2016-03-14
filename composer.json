@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-4": {
+            "RaspberryImageCdn\\": "src/"
+        }
+    },
+    "require": {
+        "silex/silex": "~1.1",
+        "gregwar/image": "^2.0"
+    }
+}
