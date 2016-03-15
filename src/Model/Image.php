@@ -42,12 +42,11 @@ class Image
             return sprintf('%s%s', $name, $this->getQuery());
         }
 
-        return $name;
-    }
+        if ($this->url) {
+            return md5($name);
+        }
 
-    public function getFile()
-    {
-        return sprintf('%s', $this->getFileName());
+        return $name;
     }
 
     public function getUrl()
@@ -82,13 +81,11 @@ class Image
 
     public function getBasePath()
     {
-        $hash = md5($this->getFileName());
-
         return sprintf(
             '%s/%s/%s',
-            substr($hash, 0, 3),
-            substr($hash, 3, 1),
-            $this->getFile()
+            substr($this->getFileName(), 0, 3),
+            substr($this->getFileName(), 3, 1),
+            $this->getFileName()
         );
     }
 }

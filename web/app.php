@@ -24,7 +24,7 @@ $app->get('/upload', function (Request $request) {
     }
 
     return new JsonResponse([
-        'file' => sprintf('/%s',$image->getFile())
+        'file' => sprintf('/%s',$image->getFileName())
     ]);
 });
 
