@@ -20,7 +20,7 @@ $app->get('/upload', function (Request $request) {
     $image->upload();
 
     if (!file_exists($image->getPath())) {
-        throw new NotFoundHttpException();
+        return new BinaryFileResponse(__DIR__.'/placeholder.png');
     }
 
     return new JsonResponse([
@@ -32,7 +32,7 @@ $app->get('/{name}', function ($name) {
     $image = (new Image())->setName($name);
 
     if (!file_exists($image->getPath())) {
-        throw new NotFoundHttpException;
+        return new BinaryFileResponse(__DIR__.'/placeholder.png');
     }
 
     return new BinaryFileResponse($image->getPath());
@@ -47,6 +47,7 @@ $app->get('/{query}/{name}', function ($query, $name) {
         return new BinaryFileResponse($cdnImage->getPath());
     }
 
+
     preg_match('#w_(\d+)#i', $query, $matchWidth);
     preg_match('#h_(\d+)#i', $query, $matchHeight);
 
@@ -56,6 +57,10 @@ $app->get('/{query}/{name}', function ($query, $name) {
             ->getPath()
     );
 
+    if (!$image->correct()) {
+        return new BinaryFileResponse(__DIR__.'/placeholder.png');
+    }
+    
     $width = $image->width();
     $height = $image->height();
 
