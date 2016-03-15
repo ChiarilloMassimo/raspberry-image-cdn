@@ -69,7 +69,9 @@ $app->get('/{query}/{name}', function ($query, $name) {
 
     $image->zoomCrop($width, $height);
 
-    $image->save(
+    $image
+        ->contrast(18)
+        ->save(
         $cdnImage
             ->setQuery($query)
             ->getPath()

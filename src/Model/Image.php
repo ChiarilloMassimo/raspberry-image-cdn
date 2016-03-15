@@ -68,6 +68,7 @@ class Image
         }
 
         return \Gregwar\Image\Image::open($this->url)
+            ->contrast(18)
             ->save($this->getPath());
     }
 
