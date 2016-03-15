@@ -8,6 +8,20 @@ class Image
 
     protected $name;
 
+    protected $query;
+
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    public function setQuery($query)
+    {
+        $this->query = $query;
+
+        return $this;
+    }
+
     public function setName($name)
     {
         $this->name = $name;
@@ -22,11 +36,13 @@ class Image
 
     public function getFileName()
     {
-        if (!$this->name) {
-            return pathinfo($this->url, PATHINFO_FILENAME);
+        $name = pathinfo((!$this->name) ? $this->url : $this->name, PATHINFO_FILENAME);
+
+        if ($this->getQuery()) {
+            return sprintf('%s%s', $name, $this->getQuery());
         }
 
-        return pathinfo($this->name, PATHINFO_FILENAME);
+        return $name;
     }
 
     public function getFile()
@@ -34,28 +50,17 @@ class Image
         return sprintf('%s', $this->getFileName());
     }
 
-    /**
-     * @return mixed
-     */
     public function getUrl()
     {
         return $this->url;
     }
 
-    /**
-     * @param mixed $url
-     * @return $this
-     */
     public function setUrl($url)
     {
         $this->url = $url;
         return $this;
     }
 
-    /**
-     * @return bool|mixed|string
-     * @throws \Exception
-     */
     public function upload()
     {
         if (file_exists($this->getPath())) {

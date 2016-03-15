@@ -5,7 +5,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use \Symfony\Component\HttpFoundation\JsonResponse;
-use \Symfony\Component\HttpFoundation\Response;
+use \Symfony\Component\HttpFoundation\BinaryFileResponse;
 use RaspberryImageCdn\Model\Image;
 
 $app = new Silex\Application();
@@ -35,27 +35,26 @@ $app->get('/{name}', function ($name) {
         throw new NotFoundHttpException;
     }
 
-    $image = \Gregwar\Image\Image::open($image->getPath());
-
-    $response = new Response(file_get_contents($image->png()));
-    $response->headers->add(
-        ['Content-Type' => 'image/png']
-    );
-
-    return $response;
+    return new BinaryFileResponse($image->getPath());
 });
 
 $app->get('/{query}/{name}', function ($query, $name) {
-    $image = (new Image())->setName($name);
+    $cdnImage = (new Image())
+        ->setName($name)
+        ->setQuery($query);
 
-    if (!file_exists($image->getPath())) {
-        throw new NotFoundHttpException;
+    if (file_exists($cdnImage->getPath())) {
+        return new BinaryFileResponse($cdnImage->getPath());
     }
 
     preg_match('#w_(\d+)#i', $query, $matchWidth);
     preg_match('#h_(\d+)#i', $query, $matchHeight);
 
-    $image = \Gregwar\Image\Image::open($image->getPath());
+    $image = \Gregwar\Image\Image::open(
+        $cdnImage
+            ->setQuery(null)
+            ->getPath()
+    );
 
     $width = $image->width();
     $height = $image->height();
@@ -70,12 +69,13 @@ $app->get('/{query}/{name}', function ($query, $name) {
 
     $image->zoomCrop($width, $height);
 
-    $response = new Response(file_get_contents($image->png()));
-    $response->headers->add(
-        ['Content-Type' => sprintf('image/png')]
+    $image->save(
+        $cdnImage
+            ->setQuery($query)
+            ->getPath()
     );
 
-    return $response;
+    return new BinaryFileResponse($cdnImage->getPath());
 });
 
 $app->run();
