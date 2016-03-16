@@ -43,7 +43,7 @@ class Image
         }
 
         if ($this->url) {
-            return md5($name);
+            return sprintf('%s-%s', md5($name), $name);
         }
 
         return $name;
