@@ -36,14 +36,14 @@ class Image
 
     public function getFileName()
     {
-        $name = pathinfo((!$this->name) ? $this->url : $this->name, PATHINFO_FILENAME);
+        $name = str_replace('.', '-', pathinfo((!$this->name) ? $this->url : $this->name, PATHINFO_FILENAME));
 
         if ($this->getQuery()) {
-            return sprintf('%s%s', $name, $this->getQuery());
+            return sprintf('%s_%s', $name, $this->getQuery());
         }
 
         if ($this->url) {
-            return sprintf('%s-%s', md5($name), $name);
+            return sprintf('%s-%s', uniqid(), $name);
         }
 
         return $name;

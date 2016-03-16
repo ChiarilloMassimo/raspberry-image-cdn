@@ -17,14 +17,15 @@ $app->get('/upload', function (Request $request) {
     }
 
     $image = (new Image())->setUrl($url);
-    $image->upload();
 
-    if (!file_exists($image->getPath())) {
+    $upload = $image->upload();
+
+    if (!file_exists($upload)) {
         return new BinaryFileResponse(__DIR__.'/placeholder.png');
     }
 
     return new JsonResponse([
-        'file' => sprintf('/%s',$image->getFileName())
+        'file' => sprintf('/%s', pathinfo($upload, PATHINFO_FILENAME))
     ]);
 });
 
